@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobkichu Bazar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo">SOBKICHU BAZAR</div>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="পণ্য খুঁজুন..." data-bn-placeholder="পণ্য খুঁজুন..." data-en-placeholder="Search products...">
+        </div>
+
+        <div id="headerRight" style="display: flex; align-items: center; gap: 10px;">
+            <button class="lang-btn" onclick="toggleLanguage()">বাংলা</button>
+            <button class="register-btn" onclick="openRegister()" data-bn="রেজিস্ট্রেশন" data-en="Register">রেজিস্ট্রেশন</button>
+        </div>
+    </header>
+
+    <!-- Main Layout with Sidebar -->
+    <div class="main-layout">
+        <!-- Sidebar Section -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" onclick="showSection('home')" data-bn="📁 ফাইল ১ (হোম)" data-en="📁 File 1 (Home)">📁 ফাইল ১ (হোম)</a></li>
+                <li><a href="#" onclick="showSection('products')" data-bn="📁 ফাইল ২ (পণ্য)" data-en="📁 File 2 (Products)">📁 ফাইল ২ (পণ্য)</a></li>
+                <li><a href="#" onclick="showSection('orders')" data-bn="📁 ফাইল ৩ (অর্ডার)" data-en="📁 File 3 (Orders)">📁 ফাইল ৩ (অর্ডার)</a></li>
+                <li><a href="#" onclick="showSection('offers')" data-bn="📁 ফাইল ৪ (অফিস)" data-en="📁 File 4 (Offers)">📁 ফাইল ৪ (অফিস)</a></li>
+                <li><a href="#" onclick="showSection('contact')" data-bn="📁 ফাইল ৫ (যোগাযোগ)" data-en="📁 File 5 (Contact)">📁 ফাইল ৫ (যোগাযোগ)</a></li>
+            </ul>
+            <div class="sidebar-settings">
+                <a href="#" onclick="showSection('settings')" data-bn="⚙️ সেটিংস" data-en="⚙️ Settings">⚙️ সেটিংস</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area" id="mainContentArea">
+            
+            <!-- ফাইল ১ (হোম / ডেইলি মাছ কেনার হিসাব) -->
+            <div id="section-home" class="app-section">
+                <h2 id="excelHeaderTitle">দেইলি মাছ কেনার হিসাব</h2>
+                <!-- ফিল্টার সেকশন -->
+                <div class="filter-container" style="margin-bottom: 15px;">
+                    <label>From: <input type="datetime-local" id="filterFromDate"></label>
+                    <label>To: <input type="datetime-local" id="filterToDate"></label>
+                    <button onclick="applyDateFilter()">Filter</button>
+                    <button onclick="resetDateFilter()">রিফ্রেশ</button>
+                    <button onclick="printTableSheet()">প্রিন্ট</button>
+                    <button onclick="exportToExcelFile()">এক্সেল</button>
+                    <button onclick="exportToPdfFile()">পিডিএফ</button>
+                </div>
+
+                <!-- ড্যাশবোর্ড কার্ড ১ -->
+                <div class="dashboard-cards" style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <div class="card">
+                        <h3>মোট মাছ এর আইটেম</h3>
+                        <p id="totalEntriesVal">3</p>
+                        <span id="totalEntriesText">3টি</span>
+                    </div>
+                    <div class="card">
+                        <h3>মোট টাকার পরিমাণ</h3>
+                        <p id="totalTakaVal">৳10000</p>
+                        <span id="totalTakaText">10000 টাকা</span>
+                    </div>
+                    <div class="card">
+                        <h3>মোট পরিমাণ (কেজি)</h3>
+                        <p id="totalQtyVal">9 কেজি</p>
+                        <span id="totalQtyText">9 কেজি</span>
+                    </div>
+                </div>
+
+                <!-- টেবিল ১ -->
+                <table id="excelTable" border="1" style="width:15%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>আইটেম নাম্বার</th>
+                            <th>তারিখ</th>
+                            <th>নাম</th>
+                            <th>মোট পরিমাণ (কেজি)</th>
+                            <th>মোট টাকা</th>
+                            <th>প্রতি কেজি</th>
+                            <th>মোট মূল্য</th>
+                            <th class="no-print">অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="excelTableBody">
+                        <!-- জাভাস্ক্রিপ্ট দিয়ে রো রেন্ডার হবে -->
+                    </tbody>
+                </table>
+                <button onclick="addNewRow()" style="margin-top: 10px;">+ রো যোগ করুন</button>
+            </div>
+
+            <!-- ফাইল ২ (পণ্য / নষ্ট বা খারাপ মাছের হিসাব) -->
+            <div id="section-products" class="app-section" style="display: none;">
+                <h2 id="excelHeaderTitle2">নষ্ট বা খারাপ মাছের হিসাব</h2>
+                <div class="filter-container" style="margin-bottom: 15px;">
+                    <label>From: <input type="datetime-local" id="filterFromDate2"></label>
+                    <label>To: <input type="datetime-local" id="filterToDate2"></label>
+                    <button onclick="applyDateFilter2()">Filter</button>
+                    <button onclick="resetDateFilter2()">রিফ্রেশ</button>
+                    <button onclick="printTableSheet2()">প্রিন্ট</button>
+                    <button onclick="exportToExcelFile2()">এক্সেল</button>
+                    <button onclick="exportToPdfFile2()">পিডিএফ</button>
+                </div>
+
+                <div class="dashboard-cards" style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <div class="card">
+                        <h3>মোট নষ্ট আইটেম</h3>
+                        <p id="totalEntriesVal2">0</p>
+                        <span id="totalEntriesText2">0টি</span>
+                    </div>
+                    <div class="card">
+                        <h3>মোট লোকসান (টাকা)</h3>
+                        <p id="totalTakaVal2">৳0</p>
+                        <span id="totalTakaText2">0 টাকা</span>
+                    </div>
+                    <div class="card">
+                        <h3>মোট নষ্ট পরিমাণ</h3>
+                        <p id="totalQtyVal2">0 কেজি</p>
+                        <span id="totalQtyText2">0 কেজি</span>
+                    </div>
+                </div>
+
+                <table id="excelTable2" border="1" style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>আইটেম নাম্বার</th>
+                            <th>তারিখ</th>
+                            <th>নাম</th>
+                            <th>মোট পরিমাণ (কেজি)</th>
+                            <th>মোট টাকা</th>
+                            <th>প্রতি কেজি</th>
+                            <th>মোট মূল্য</th>
+                            <th class="no-print">অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="excelTableBody2">
+                        <!-- কার্ড ২ এর ডাটা এখানে থাকবে -->
+                    </tbody>
+                </table>
+                <button onclick="addNewRow2()" style="margin-top: 10px;">+ রো যোগ করুন</button>
+            </div>
+
+            <!-- ফাইল ৩ (অর্ডার) -->
+            <div id="section-orders" class="app-section" style="display: none;">
+                <h2 id="excelHeaderTitle3">অর্ডার হিসাব শিট</h2>
+                <!-- একইভাবে চাইলে ৩ নম্বর কার্ডের আইডিগুলোও আলাদা করে নিতে পারেন -->
+            </div>
+
+            <!-- ফাইল ৪ (অফিস) -->
+            <div id="section-offers" class="app-section" style="display: none;">
+                <h2 id="excelHeaderTitle4">অফিস হিসাব শিট</h2>
+            </div>
+
+            <!-- ফাইল ৫ (যোগাযোগ) -->
+            <div id="section-contact" class="app-section" style="display: none;">
+                <h2>যোগাযোগ তথ্য</h2>
+            </div>
+
+            <!-- সেটিংস -->
+            <div id="section-settings" class="app-section" style="display: none;">
+                <h2>সেটিংস</h2>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Register Modal Popup -->
+    <div id="registerModal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h2 class="form-title" data-bn="রেজিস্ট্রেশন ফর্ম" data-en="Registration Form">রেজিস্ট্রেশন ফর্ম</h2>
+            
+            <div class="form-group">
+                <label data-bn="সম্পূর্ণ নাম" data-en="Full Name">সম্পূর্ণ নাম</label>
+                <input type="text" id="regName" placeholder="আপনার নাম লিখুন" data-bn-placeholder="আপনার নাম লিখুন" data-en-placeholder="Enter your name">
+            </div>
+
+            <div class="form-group">
+                <label data-bn="ইমেল অর ফোন নাম্বার" data-en="Email or Phone">ইমেল অর ফোন নাম্বার</label>
+                <input type="text" id="regEmail" placeholder="ইমেইল বা ফোন নম্বর দিন" data-bn-placeholder="ইমেইল বা ফোন নম্বর দিন" data-en-placeholder="Enter email or phone">
+            </div>
+
+            <div class="form-group">
+                <label data-bn="পাসওয়ার্ড" data-en="Password">পাসওয়ার্ড</label>
+                <div class="password-box">
+                    <input type="password" id="regPass" placeholder="পাসওয়ার্ড দিন" data-bn-placeholder="পাসওয়ার্ড দিন" data-en-placeholder="Enter password">
+                    <span class="eye-icon" onclick="togglePassword('regPass')">👁️</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label data-bn="কনফার্ম পাসওয়ার্ড" data-en="Confirm Password">কনফার্ম পাসওয়ার্ড</label>
+                <div class="password-box">
+                    <input type="password" id="confPass" placeholder="পুনরায় পাসওয়ার্ড দিন" data-bn-placeholder="পুনরায় পাসওয়ার্ড দিন" data-en-placeholder="Confirm password">
+                    <span class="eye-icon" onclick="togglePassword('confPass')">👁️</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label data-bn="ভেরিফিকেশন কোড" data-en="Verification Code">ভেরিফিকেশন কোড</label>
+                <input type="text" id="verifyCode" placeholder="কোডটি এখানে দিন" data-bn-placeholder="কোডটি এখানে দিন" data-en-placeholder="Enter verification code">
+            </div>
+
+            <div class="form-group">
+               <label data-bn="প্রোফাইল ছবি আপলোড করুন" data-en="Upload Profile Picture">প্রোফাইল ছবি আপলোড করুন</label>
+               <input type="file" id="regPicFile" accept="image/*" style="border: none; padding: 0;">
+            </div>
+
+            <button class="submit-btn" onclick="submitRegister()" data-bn="রেজিস্ট্রেশন কনফার্ম করুন" data-en="Confirm Registration">রেজিস্ট্রেশন কনফার্ম করুন</button>
+            <button class="close-btn" onclick="closeRegister()" data-bn="বন্ধ করুন" data-en="Close">বন্ধ করুন</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
